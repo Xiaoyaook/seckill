@@ -3,10 +3,12 @@ package com.ziliang.seckill.service;
 
 import com.ziliang.seckill.dao.SeckillUserDao;
 import com.ziliang.seckill.domain.SeckillUser;
+import com.ziliang.seckill.exception.GlobalException;
 import com.ziliang.seckill.redis.RedisService;
 import com.ziliang.seckill.redis.SeckillUserKey;
 import com.ziliang.seckill.result.CodeMsg;
 import com.ziliang.seckill.util.MD5Util;
+import com.ziliang.seckill.util.UUIDUtil;
 import com.ziliang.seckill.vo.LoginVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,15 +64,16 @@ public class SeckillUserService {
             throw new GlobalException(CodeMsg.PASSWORD_ERROR);
         }
         //生成cookie
-        String token	 = UUIDUtil.uuid();
+        String token = UUIDUtil.uuid();
         addCookie(response, token, user);
         return true;
     }
 
+    // token信息存放到redis中
     private void addCookie(HttpServletResponse response, String token, SeckillUser user) {
         redisService.set(SeckillUserKey.token, token, user);
         Cookie cookie = new Cookie(COOKI_NAME_TOKEN, token);
-        cookie.setMaxAge(SeckillUserKey.token.expireSeconds());
+        cookie.setMaxAge(SeckillUserKey.token.expireSeconds()); // 设置cookie有效期
         cookie.setPath("/");
         response.addCookie(cookie);
     }
