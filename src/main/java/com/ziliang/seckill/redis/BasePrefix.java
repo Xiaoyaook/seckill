@@ -1,5 +1,6 @@
 package com.ziliang.seckill.redis;
 
+// 抽象类,实现最顶端接口
 public abstract class BasePrefix implements KeyPrefix {
     private int expireSeconds;
 
