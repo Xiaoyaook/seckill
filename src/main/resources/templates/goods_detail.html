@@ -45,7 +45,7 @@
                 <span th:if="${seckillStatus eq 2}">秒杀已结束</span>
             </td>
             <td>
-                <form id="miaoshaForm" method="post" action="/miaosha/do_miaosha">
+                <form id="seckillForm" method="post" action="/seckill/do_seckill">
                     <button class="btn btn-primary btn-block" type="submit" id="buyButton">立即秒杀</button>
                     <input type="hidden" name="goodsId" th:value="${goods.id}" />
                 </form>
@@ -86,7 +86,7 @@
             if(timeout){
                 clearTimeout(timeout);
             }
-            $("#seckillTip").html("秒杀进行中");
+            $("#seckillTip").html("秒杀进行中");z
         }else{//秒杀已经结束
             $("#buyButton").attr("disabled", true);
             $("#miaoshaTip").html("秒杀已经结束");
