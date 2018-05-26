@@ -9,4 +9,4 @@ CREATE TABLE `seckill_goods` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `seckill_goods` VALUES (1,1,0.01,4,'2018-11-05 15:18:00','2018-11-13 14:00:18'),
-                                  (2,2,0.01,9,'2018-11-12 15:18:00','2018-11-13 14:00:18')
+                                  (2,2,0.01,9,'2018-11-12 15:18:00','2018-11-13 14:00:18');
