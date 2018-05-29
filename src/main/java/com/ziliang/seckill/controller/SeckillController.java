@@ -5,6 +5,7 @@ import com.ziliang.seckill.domain.SeckillOrder;
 import com.ziliang.seckill.domain.SeckillUser;
 import com.ziliang.seckill.redis.RedisService;
 import com.ziliang.seckill.result.CodeMsg;
+import com.ziliang.seckill.result.Result;
 import com.ziliang.seckill.service.GoodsService;
 import com.ziliang.seckill.service.OrderService;
 import com.ziliang.seckill.service.SeckillService;
@@ -14,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/seckill")
@@ -38,7 +41,7 @@ public class SeckillController {
      * QPS:1306
      * 5000 * 10
      * 目前在高并发下,出现超卖
-     * */
+
     @RequestMapping("/do_seckill")
     public String list(Model model, SeckillUser user,
                        @RequestParam("goodsId")long goodsId) {
@@ -64,5 +67,31 @@ public class SeckillController {
         model.addAttribute("orderInfo", orderInfo);
         model.addAttribute("goods", goods);
         return "order_detail";
+    }
+    */
+
+    // 秒杀接口,前后端分离
+    @RequestMapping(value="/do_seckill", method= RequestMethod.POST)
+    @ResponseBody
+    public Result<OrderInfo> seckill(Model model,SeckillUser user,
+                                     @RequestParam("goodsId")long goodsId) {
+        model.addAttribute("user", user);
+        if(user == null) {
+            return Result.error(CodeMsg.SESSION_ERROR);
+        }
+        //判断库存
+        GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);//10个商品，req1 req2
+        int stock = goods.getStockCount();
+        if(stock <= 0) {
+            return Result.error(CodeMsg.SECKILL_OVER);
+        }
+        //判断是否已经秒杀到了
+        SeckillOrder order = orderService.getSeckillOrderByUserIdGoodsId(user.getId(), goodsId);
+        if(order != null) {
+            return Result.error(CodeMsg.REPEATE_SECKILL);
+        }
+        //减库存 下订单 写入秒杀订单
+        OrderInfo orderInfo = seckillService.seckill(user, goods);
+        return Result.success(orderInfo);
     }
 }

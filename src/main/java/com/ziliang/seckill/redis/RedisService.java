@@ -97,6 +97,23 @@ public class RedisService {
             returnToPool(jedis);
         }
     }
+
+    /**
+     * 删除
+     * */
+    public boolean delete(KeyPrefix prefix, String key) {
+        Jedis jedis = null;
+        try {
+            jedis =  jedisPool.getResource();
+            //生成真正的key
+            String realKey  = prefix.getPrefix() + key;
+            long ret =  jedis.del(key);
+            return ret > 0;
+        }finally {
+            returnToPool(jedis);
+        }
+    }
+
     // 转化value的类型为String,例如value是个POJO,就将其转化为JSONString
     private <T> String beanToString(T value) {
         if(value == null) {
