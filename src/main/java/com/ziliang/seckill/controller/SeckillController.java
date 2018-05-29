@@ -37,6 +37,7 @@ public class SeckillController {
     /**
      * QPS:1306
      * 5000 * 10
+     * 目前在高并发下,出现超卖
      * */
     @RequestMapping("/do_seckill")
     public String list(Model model, SeckillUser user,
