@@ -22,7 +22,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 
@@ -104,6 +108,8 @@ public class SeckillController implements InitializingBean {
         boolean over = localOverMap.get(goodsId);
         if(over) {
             return Result.error(CodeMsg.SECKILL_OVER);
+        }{
+            return Result.error(CodeMsg.SESSION_ERROR);
         }
         //预减库存
         long stock = redisService.decr(GoodsKey.getSeckillGoodsStock, ""+goodsId);//10
@@ -158,6 +164,26 @@ public class SeckillController implements InitializingBean {
         return Result.success(path);
     }
 
+
+    @RequestMapping(value="/verifyCode", method=RequestMethod.GET)
+    @ResponseBody
+    public Result<String> getSeckillaVerifyCode(HttpServletResponse response, SeckillUser user,
+                                               @RequestParam("goodsId")long goodsId) {
+        if(user == null) {
+            return Result.error(CodeMsg.SESSION_ERROR);
+        }
+        try {
+            BufferedImage image  = seckillService.createVerifyCode(user, goodsId);
+            OutputStream out = response.getOutputStream();
+            ImageIO.write(image, "JPEG", out);
+            out.flush();
+            out.close();
+            return null;
+        }catch(Exception e) {
+            e.printStackTrace();
+            return Result.error(CodeMsg.SECKILL_FAIL);
+        }
+    }
     /*
      *
      * QPS:1306
