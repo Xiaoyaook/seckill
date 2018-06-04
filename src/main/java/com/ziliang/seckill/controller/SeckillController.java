@@ -1,5 +1,6 @@
 package com.ziliang.seckill.controller;
 
+import com.ziliang.seckill.access.AccessLimit;
 import com.ziliang.seckill.domain.OrderInfo;
 import com.ziliang.seckill.domain.SeckillOrder;
 import com.ziliang.seckill.domain.SeckillUser;
@@ -85,11 +86,6 @@ public class SeckillController implements InitializingBean {
         return Result.success(true);
     }
 
-    /**
-     * QPS:1306
-     * 5000 * 10
-     * QPS: 2114
-     * */
     @RequestMapping(value="/{path}/do_seckill", method=RequestMethod.POST)
     @ResponseBody
     public Result<Integer> seckill(Model model,SeckillUser user,
@@ -108,8 +104,6 @@ public class SeckillController implements InitializingBean {
         boolean over = localOverMap.get(goodsId);
         if(over) {
             return Result.error(CodeMsg.SECKILL_OVER);
-        }{
-            return Result.error(CodeMsg.SESSION_ERROR);
         }
         //预减库存
         long stock = redisService.decr(GoodsKey.getSeckillGoodsStock, ""+goodsId);//10
@@ -128,6 +122,7 @@ public class SeckillController implements InitializingBean {
         mm.setGoodsId(goodsId);
         sender.sendSeckillMessage(mm);
         return Result.success(0);//排队中
+
     }
 
     /**
@@ -147,6 +142,7 @@ public class SeckillController implements InitializingBean {
         return Result.success(result);
     }
 
+    @AccessLimit(seconds=5, maxCount=5, needLogin=true)
     @RequestMapping(value="/path", method=RequestMethod.GET)
     @ResponseBody
     public Result<String> getSeckillPath(HttpServletRequest request, SeckillUser user,
@@ -186,8 +182,6 @@ public class SeckillController implements InitializingBean {
     }
     /*
      *
-     * QPS:1306
-     * 5000 * 10
      * 目前在高并发下,出现超卖
 
     @RequestMapping("/do_seckill")
