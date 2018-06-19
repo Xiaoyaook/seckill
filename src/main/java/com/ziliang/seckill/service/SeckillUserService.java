@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 @Service
 public class SeckillUserService {
     public static final String COOKI_NAME_TOKEN = "token";
-
     @Autowired
     SeckillUserDao seckillUserDao;
 
@@ -71,8 +70,8 @@ public class SeckillUserService {
         return user;
     }
 
-
-    public boolean login(HttpServletResponse response, LoginVo loginVo) {
+    // 前后端分离后,我们返回user,保存到全局
+    public SeckillUser login(HttpServletResponse response, LoginVo loginVo) {
         if(loginVo == null) {
             throw new GlobalException(CodeMsg.SERVER_ERROR);
         }
@@ -93,7 +92,7 @@ public class SeckillUserService {
         //生成cookie
         String token = UUIDUtil.uuid();
         addCookie(response, token, user);
-        return true;
+        return user;
     }
 
     // token信息存放到redis中

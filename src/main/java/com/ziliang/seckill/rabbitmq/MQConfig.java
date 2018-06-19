@@ -20,6 +20,11 @@ public class MQConfig {
     public static final String FANOUT_EXCHANGE = "fanoutxchage";
     public static final String HEADERS_EXCHANGE = "headersExchage";
 
+
+    @Bean
+    public Queue queue() {
+        return new Queue(SECKILL_QUEUE, true);
+    }
 //    /**
 //     * Direct模式 交换机Exchange
 //     * */

@@ -1,5 +1,6 @@
 package com.ziliang.seckill.controller;
 
+import com.ziliang.seckill.domain.SeckillUser;
 import com.ziliang.seckill.redis.RedisService;
 import com.ziliang.seckill.result.Result;
 import com.ziliang.seckill.service.SeckillUserService;
@@ -8,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -16,6 +18,7 @@ import javax.validation.Valid;
 
 
 @Controller
+@CrossOrigin(origins = {"http://localhost:8081"}, allowCredentials = "true")
 @RequestMapping("/login")
 public class LoginController {
     private static Logger log = LoggerFactory.getLogger(LoginController.class);
@@ -33,10 +36,10 @@ public class LoginController {
 
     @RequestMapping("/do_login")
     @ResponseBody
-    public Result<Boolean> doLogin(HttpServletResponse response, @Valid LoginVo loginVo) {
+    public Result<SeckillUser> doLogin(HttpServletResponse response, @Valid LoginVo loginVo) {
         log.info(loginVo.toString());
         //登录
-        userService.login(response, loginVo);
-        return Result.success(true);
+        SeckillUser user = userService.login(response, loginVo);
+        return Result.success(user);
     }
 }

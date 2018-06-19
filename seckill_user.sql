@@ -9,3 +9,5 @@ CREATE TABLE `seckill_user` (
   `login_count` INT(11) DEFAULT 0 COMMENT '登录次数',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+insert into seckill_user(id,nickname,password,salt) values('12345678912','boom','f48b602b0afecad864390ce496280864','saltsalt');

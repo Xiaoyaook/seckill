@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Controller
+@CrossOrigin(origins = {"http://localhost:8081"}, allowCredentials = "true")
 @RequestMapping("/seckill")
 public class SeckillController implements InitializingBean {
     @Autowired

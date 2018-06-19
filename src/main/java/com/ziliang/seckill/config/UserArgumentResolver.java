@@ -15,6 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+// 自定义解析器进行参数绑定
 @Service
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -40,13 +41,13 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         return userService.getByToken(response, token);
     }
 
-    private String getCookieValue(HttpServletRequest request, String cookiName) {
+    private String getCookieValue(HttpServletRequest request, String cookieName) {
         Cookie[]  cookies = request.getCookies();
         if(cookies == null || cookies.length <= 0){
             return null;
         }
         for(Cookie cookie : cookies) {
-            if(cookie.getName().equals(cookiName)) {
+            if(cookie.getName().equals(cookieName)) {
                 return cookie.getValue();
             }
         }

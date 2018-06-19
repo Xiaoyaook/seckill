@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 
+
+// 自定义拦截器,用于注解的拦截
 @Service
 public class AccessInterceptor extends HandlerInterceptorAdapter {
     @Autowired
@@ -83,13 +85,13 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
         return userService.getByToken(response, token);
     }
 
-    private String getCookieValue(HttpServletRequest request, String cookiName) {
+    private String getCookieValue(HttpServletRequest request, String cookieName) {
         Cookie[]  cookies = request.getCookies();
         if(cookies == null || cookies.length <= 0){
             return null;
         }
         for(Cookie cookie : cookies) {
-            if(cookie.getName().equals(cookiName)) {
+            if(cookie.getName().equals(cookieName)) {
                 return cookie.getValue();
             }
         }
