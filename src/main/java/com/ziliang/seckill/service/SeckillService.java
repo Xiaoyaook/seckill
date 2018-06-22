@@ -46,7 +46,7 @@ public class SeckillService {
 
     public long getSeckillResult(Long userId, long goodsId) {
         SeckillOrder order = orderService.getSeckillOrderByUserIdGoodsId(userId, goodsId);
-        if(order != null) {//秒杀成功
+        if(order != null) {//秒杀成功,则返回订单id
             return order.getOrderId();
         }else {
             boolean isOver = getGoodsOver(goodsId);
