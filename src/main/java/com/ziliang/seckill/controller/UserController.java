@@ -7,10 +7,12 @@ import com.ziliang.seckill.service.SeckillUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/user")
 public class UserController {
 
@@ -20,8 +22,7 @@ public class UserController {
     @Autowired
     RedisService redisService;
 
-    @RequestMapping("/info")
-    @ResponseBody
+    @GetMapping("/info")
     public Result<SeckillUser> info(Model model, SeckillUser user) {
         return Result.success(user);
     }

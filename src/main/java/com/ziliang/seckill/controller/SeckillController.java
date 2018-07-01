@@ -31,7 +31,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 
-@Controller
+@RestController
 @CrossOrigin(origins = {"http://localhost:8081"}, allowCredentials = "true")
 @RequestMapping("/seckill")
 public class SeckillController implements InitializingBean {
@@ -54,7 +54,7 @@ public class SeckillController implements InitializingBean {
     MQSender sender;
 
 
-    private HashMap<Long, Boolean> localOverMap =  new HashMap<Long, Boolean>();
+    private HashMap<Long, Boolean> localOverMap =  new HashMap<>();
 
     /**
      * InitializingBean
@@ -72,8 +72,7 @@ public class SeckillController implements InitializingBean {
     }
 
     // 管理后台来做重置商品这种操作
-    @RequestMapping(value="/reset", method=RequestMethod.GET)
-    @ResponseBody
+    @GetMapping(value="/reset")
     public Result<Boolean> reset(Model model) {
         List<GoodsVo> goodsList = goodsService.listGoodsVo();
         for(GoodsVo goods : goodsList) {
@@ -87,8 +86,7 @@ public class SeckillController implements InitializingBean {
         return Result.success(true);
     }
 
-    @RequestMapping(value="/{path}/do_seckill", method=RequestMethod.POST)
-    @ResponseBody
+    @PostMapping(value="/{path}/do_seckill")
     public Result<Integer> seckill(Model model,SeckillUser user,
                                    @RequestParam("goodsId")long goodsId,
                                    @PathVariable("path") String path) {
@@ -131,8 +129,7 @@ public class SeckillController implements InitializingBean {
      * -1：秒杀失败
      * 0： 排队中
      * */
-    @RequestMapping(value="/result", method=RequestMethod.GET)
-    @ResponseBody
+    @GetMapping(value="/result")
     public Result<Long> seckillResult(Model model,SeckillUser user,
                                       @RequestParam("goodsId")long goodsId) {
         model.addAttribute("user", user);
@@ -144,8 +141,7 @@ public class SeckillController implements InitializingBean {
     }
 
     @AccessLimit(seconds=5, maxCount=5, needLogin=true)
-    @RequestMapping(value="/path", method=RequestMethod.GET)
-    @ResponseBody
+    @GetMapping(value="/path")
     public Result<String> getSeckillPath(HttpServletRequest request, SeckillUser user,
                                          @RequestParam("goodsId")long goodsId,
                                          @RequestParam(value="verifyCode", defaultValue="0")int verifyCode
@@ -162,8 +158,7 @@ public class SeckillController implements InitializingBean {
     }
 
 
-    @RequestMapping(value="/verifyCode", method=RequestMethod.GET)
-    @ResponseBody
+    @GetMapping(value="/verifyCode")
     public Result<String> getSeckillaVerifyCode(HttpServletResponse response, SeckillUser user,
                                                @RequestParam("goodsId")long goodsId) {
         if(user == null) {

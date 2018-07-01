@@ -13,10 +13,7 @@ import com.ziliang.seckill.vo.OrderDetailVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @CrossOrigin(origins = {"http://localhost:8081"}, allowCredentials = "true")
@@ -34,10 +31,10 @@ public class OrderController {
     @Autowired
     GoodsService goodsService;
 
-    @RequestMapping("/detail")
+    @RequestMapping("/detail/{orderId}")
     @ResponseBody
     public Result<OrderDetailVo> info(Model model, SeckillUser user,
-                                      @RequestParam("orderId") long orderId) {
+                                      @PathVariable("orderId") long orderId) {
         if(user == null) {
             return Result.error(CodeMsg.SESSION_ERROR);
         }
