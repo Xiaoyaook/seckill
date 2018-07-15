@@ -1,10 +1,18 @@
 # 电商秒杀系统后端总结
 
-本项目中对于秒杀的高并发最关键的优化就是使用Redis缓存和RabbitMQ异步下单。
+本项目中对于秒杀的高并发最关键的优化就是使用Redis缓存和RabbitMQ异步下单
 
-对于恶意防刷，我们采用隐藏秒杀地址，数字验证码和接口限流来预防。
+对于恶意防刷，我们采用隐藏秒杀地址，数字验证码和接口限流来预防
 
 主要页面有四个：用户登录，商品陈列，商品详情，订单详情
+
+使用Swagger2，通过注解的形式自动生成API文档
+
+系统架构图：
+![系统架构图](./photo/seckill-system-architecture.png)
+
+swagger生成的Api文档:
+![api文档](./photo/swagger生成的Api文档.png)
 
 ## 一、环境搭建
 
@@ -22,6 +30,7 @@
 * spring-boot-starter-validation，jsr303参数校验框架 依赖
 * spring-boot-starter-amqp，消息队列依赖
 * spring-boot-starter-thymeleaf，Thymleaf 依赖(前后端分离后不再需要)
+* Swagger2，swagger-ui，API文档依赖
 
 ### 在application.propeties中进行配置
 

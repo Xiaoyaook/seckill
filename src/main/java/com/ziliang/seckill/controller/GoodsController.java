@@ -8,6 +8,9 @@ import com.ziliang.seckill.service.GoodsService;
 import com.ziliang.seckill.service.SeckillUserService;
 import com.ziliang.seckill.vo.GoodsDetailVo;
 import com.ziliang.seckill.vo.GoodsVo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -21,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+@Api(value = "商品展示controller", tags = {"获取商品信息"})
 @RestController
 @CrossOrigin(origins = {"http://localhost:8081"}, allowCredentials = "true")
 @RequestMapping("/goods")
@@ -34,9 +38,7 @@ public class GoodsController {
     @Autowired
     GoodsService goodsService;
 
-    @Autowired
-    ThymeleafViewResolver thymeleafViewResolver;
-
+    @ApiOperation(value = "获取商品列表")
     @GetMapping(value="/to_list")
     public Result<List<GoodsVo>> list(HttpServletRequest request, HttpServletResponse response, Model model, SeckillUser user) {
         List<GoodsVo> goodsList = goodsService.listGoodsVo();
@@ -44,7 +46,8 @@ public class GoodsController {
 
     }
 
-    // 商品详情接口,前端用来调用的接口,进行页面静态化,前后端分离
+    @ApiOperation(value = "获取商品详情", notes = "由商品id获取商品详情")
+    @ApiImplicitParam(name = "goodsId", value = "商品id", required = true, dataType = "long")
     @GetMapping(value="/detail/{goodsId}")
     public Result<GoodsDetailVo> detail(HttpServletRequest request, HttpServletResponse response, Model model, SeckillUser user,
                                         @PathVariable("goodsId")long goodsId) {
@@ -76,99 +79,4 @@ public class GoodsController {
         return Result.success(vo);
     }
 
-    // 进行页面缓存
-    //    @RequestMapping(value="/to_list", produces="text/html")
-    //    @ResponseBody
-    //    public String list(HttpServletRequest request, HttpServletResponse response, Model model, SeckillUser user) {
-    //        model.addAttribute("user", user);
-    //        //取缓存
-    //        String html = redisService.get(GoodsKey.getGoodsList, "", String.class);
-    //        if(!StringUtils.isEmpty(html)) {
-    //            return html;
-    //        }
-    //        List<GoodsVo> goodsList = goodsService.listGoodsVo();
-    //        model.addAttribute("goodsList", goodsList);
-    //        //return "goods_list";
-    //        WebContext ctx = new WebContext(request,response,
-    //                request.getServletContext(),request.getLocale(), model.asMap());
-    //        //手动渲染,保存到redis中
-    //        html = thymeleafViewResolver.getTemplateEngine().process("goods_list", ctx);
-    //        if(!StringUtils.isEmpty(html)) {
-    //            redisService.set(GoodsKey.getGoodsList, "", html);
-    //        }('getdetail'
-    //        return html;
-    //    }
-        /*
-        @RequestMapping("/to_detail/{goodsId}")
-        public String detail(Model model,SeckillUser user,
-                             @PathVariable("goodsId")long goodsId) {
-            model.addAttribute("user", user);
-
-            GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
-            model.addAttribute("goods", goods);
-    GoodsKey
-            long startAt = goods.getStartDate().getTime();
-            long endAt = goods.getEndDate().getTime();
-            long now = System.currentTimeMillis();
-
-            int seckillStatus = 0;
-            int remainSeconds = 0;
-            if(now < startAt ) {//秒杀还没开始，倒计时
-                seckillStatus = 0;
-                remainSeconds = (int)((startAt - now )/1000);
-            }else  if(now > endAt){//秒杀已经结束
-                seckillStatus = 2;
-                remainSeconds = -1;
-            }else {//秒杀进行中
-                seckillStatus = 1;
-                remainSeconds = 0;
-            }
-            model.addAttribute("seckillStatus", seckillStatus);
-            model.addAttribute("remainSeconds", remainSeconds);
-            return "goods_detail";
-        } */
-
-//    @RequestMapping(value="/to_detail2/{goodsId}",produces="text/html")
-//    @ResponseBody
-//    public String detail2(HttpServletRequest request, HttpServletResponse response, Model model,SeckillUser user,
-//                          @PathVariable("goodsId")long goodsId) {
-//        model.addAttribute("user", user);
-//
-//        //取缓存
-//        String html = redisService.get(GoodsKey.getGoodsDetail, ""+goodsId, String.class);
-//        if(!StringUtils.isEmpty(html)) {
-//            return html;
-//        }
-//        //手动渲染
-//        GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
-//        model.addAttribute("goods", goods);
-//
-//        long startAt = goods.getStartDate().getTime();
-//        long endAt = goods.getEndDate().getTime();
-//        long now = System.currentTimeMillis();
-//
-//        int seckillStatus = 0;
-//        int remainSeconds = 0;
-//        if(now < startAt ) {//秒杀还没开始，倒计时
-//            seckillStatus = 0;
-//            remainSeconds = (int)((startAt - now )/1000);
-//        }else  if(now > endAt){//秒杀已经结束
-//            seckillStatus = 2;
-//            remainSeconds = -1;
-//        }else {//秒杀进行中
-//            seckillStatus = 1;
-//            remainSeconds = 0;
-//        }
-//        model.addAttribute("seckillStatus", seckillStatus);
-//        model.addAttribute("remainSeconds", remainSeconds);
-////        return "goods_detail";
-//
-//        WebContext ctx = new WebContext(request,response,
-//                request.getServletContext(),request.getLocale(), model.asMap());
-//        html = thymeleafViewResolver.getTemplateEngine().process("goods_detail", ctx);
-//        if(!StringUtils.isEmpty(html)) {
-//            redisService.set(GoodsKey.getGoodsDetail, ""+goodsId, html);
-//        }
-//        return html;
-//    }
 }

@@ -10,11 +10,15 @@ import com.ziliang.seckill.service.OrderService;
 import com.ziliang.seckill.service.SeckillUserService;
 import com.ziliang.seckill.vo.GoodsVo;
 import com.ziliang.seckill.vo.OrderDetailVo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+@Api(value = "订单controller", tags = {"获取订单信息"})
 @Controller
 @CrossOrigin(origins = {"http://localhost:8081"}, allowCredentials = "true")
 @RequestMapping("/order")
@@ -31,6 +35,8 @@ public class OrderController {
     @Autowired
     GoodsService goodsService;
 
+    @ApiOperation(value = "获取订单详情")
+    @ApiImplicitParam(name = "orderId", value = "订单id", required = true, dataType = "long")
     @RequestMapping("/detail/{orderId}")
     @ResponseBody
     public Result<OrderDetailVo> info(Model model, SeckillUser user,

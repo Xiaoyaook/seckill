@@ -17,6 +17,10 @@ import com.ziliang.seckill.service.OrderService;
 import com.ziliang.seckill.service.SeckillService;
 import com.ziliang.seckill.service.SeckillUserService;
 import com.ziliang.seckill.vo.GoodsVo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +35,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 
+@Api(value = "秒杀controller", tags = {"秒杀操作接口"})
 @RestController
 @CrossOrigin(origins = {"http://localhost:8081"}, allowCredentials = "true")
 @RequestMapping("/seckill")
@@ -71,7 +76,7 @@ public class SeckillController implements InitializingBean {
         }
     }
 
-    // 管理后台来做重置商品这种操作
+    @ApiOperation(value = "重置操作", notes = "为了方便我们测试，把数据库和缓存进行重置")
     @GetMapping(value="/reset")
     public Result<Boolean> reset(Model model) {
         List<GoodsVo> goodsList = goodsService.listGoodsVo();
@@ -86,6 +91,11 @@ public class SeckillController implements InitializingBean {
         return Result.success(true);
     }
 
+    @ApiOperation(value = "执行秒杀操作")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "goodsId", value = "商品id", required = true, dataType = "long", paramType = "query"),
+            @ApiImplicitParam(name = "path", value = "秒杀地址", required = true, dataType = "String", paramType = "path")
+    })
     @PostMapping(value="/{path}/do_seckill")
     public Result<Integer> seckill(Model model,SeckillUser user,
                                    @RequestParam("goodsId")long goodsId,
@@ -129,6 +139,8 @@ public class SeckillController implements InitializingBean {
      * -1：秒杀失败
      * 0： 排队中
      * */
+    @ApiOperation(value = "获取秒杀结果", notes = "秒杀成功返回订单id，秒杀失败返回-1,排队中返回0")
+    @ApiImplicitParam(name = "goodsId", value = "商品id", required = true, dataType = "long")
     @GetMapping(value="/result")
     public Result<Long> seckillResult(Model model,SeckillUser user,
                                       @RequestParam("goodsId")long goodsId) {
@@ -140,6 +152,11 @@ public class SeckillController implements InitializingBean {
         return Result.success(result);
     }
 
+    @ApiOperation(value = "获取秒杀地址")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "goodsId", value = "商品id", required = true, dataType = "long"),
+            @ApiImplicitParam(name = "verifyCode", value = "验证码", required = true, dataType = "int", defaultValue = "0")
+    })
     @AccessLimit(seconds=5, maxCount=5, needLogin=true)
     @GetMapping(value="/path")
     public Result<String> getSeckillPath(HttpServletRequest request, SeckillUser user,
@@ -157,7 +174,8 @@ public class SeckillController implements InitializingBean {
         return Result.success(path);
     }
 
-
+    @ApiOperation(value = "获取验证码")
+    @ApiImplicitParam(name = "goodsId", value = "商品id", required = true, dataType = "long")
     @GetMapping(value="/verifyCode")
     public Result<String> getSeckillaVerifyCode(HttpServletResponse response, SeckillUser user,
                                                @RequestParam("goodsId")long goodsId) {
@@ -176,62 +194,5 @@ public class SeckillController implements InitializingBean {
             return Result.error(CodeMsg.SECKILL_FAIL);
         }
     }
-    /*
-     *
-     * 目前在高并发下,出现超卖
 
-    @RequestMapping("/do_seckill")
-    public String list(Model model, SeckillUser user,
-                       @RequestParam("goodsId")long goodsId) {
-        model.addAttribute("user", user);
-        if(user == null) {
-            return "login";
-        }
-        //判断库存
-        GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
-        int stock = goods.getStockCount();
-        if(stock <= 0) {
-            model.addAttribute("errmsg", CodeMsg.SECKILL_OVER.getMsg());
-            return "seckill_fail";
-        }
-        //判断是否已经秒杀到了
-        SeckillOrder order = orderService.getSeckillOrderByUserIdGoodsId(user.getId(), goodsId);
-        if(order != null) {
-            model.addAttribute("errmsg", CodeMsg.REPEATE_SECKILL.getMsg());
-            return "seckill_fail";
-        }
-        //减库存 下订单 写入秒杀订单
-        OrderInfo orderInfo = seckillService.seckill(user, goods);
-        model.addAttribute("orderInfo", orderInfo);
-        model.addAttribute("goods", goods);
-        return "order_detail";
-    }
-    */
-
-    /*
-    // 秒杀接口,前后端分离
-    @RequestMapping(value="/do_seckill", method= RequestMethod.POST)
-    @ResponseBody
-    public Result<OrderInfo> seckill(Model model,SeckillUser user,
-                                     @RequestParam("goodsId")long goodsId) {
-        model.addAttribute("user", user);
-        if(user == null) {
-            return Result.error(CodeMsg.SESSION_ERROR);
-        }
-        //判断库存
-        GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);//10个商品，req1 req2
-        int stock = goods.getStockCount();
-        if(stock <= 0) {
-            return Result.error(CodeMsg.SECKILL_OVER);
-        }
-        //判断是否已经秒杀到了
-        SeckillOrder order = orderService.getSeckillOrderByUserIdGoodsId(user.getId(), goodsId);
-        if(order != null) {
-            return Result.error(CodeMsg.REPEATE_SECKILL);
-        }
-        //减库存 下订单 写入秒杀订单
-        OrderInfo orderInfo = seckillService.seckill(user, goods);
-        return Result.success(orderInfo);
-    }
-    */
 }

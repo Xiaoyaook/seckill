@@ -6,12 +6,14 @@ import com.ziliang.seckill.redis.UserKey;
 import com.ziliang.seckill.result.CodeMsg;
 import com.ziliang.seckill.result.Result;
 import com.ziliang.seckill.service.UserService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+@Api(value = "这是一个测试controller", tags = {"对response进行测试"})
 @Controller
 @RequestMapping("/demo")
 public class DemoController {
