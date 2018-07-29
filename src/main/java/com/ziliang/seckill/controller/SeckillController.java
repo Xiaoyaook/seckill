@@ -64,6 +64,7 @@ public class SeckillController implements InitializingBean {
     /**
      * InitializingBean
      * 系统初始化
+     * 把商品库存存入Redis中
      * */
     public void afterPropertiesSet() throws Exception {
         List<GoodsVo> goodsList = goodsService.listGoodsVo();

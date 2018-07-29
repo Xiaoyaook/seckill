@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 生成测试用户工具类
+ */
 public class UserUtil {
     private static void createUser(int count) throws Exception{
         List<SeckillUser> users = new ArrayList<SeckillUser>(count);

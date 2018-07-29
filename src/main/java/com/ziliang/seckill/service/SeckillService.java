@@ -31,6 +31,9 @@ public class SeckillService {
     @Autowired
     RedisService redisService;
 
+    /**
+     * 执行秒杀操作
+     */
     @Transactional
     public OrderInfo seckill(SeckillUser user, GoodsVo goods) {
         //减库存 下订单 写入秒杀订单
@@ -44,6 +47,9 @@ public class SeckillService {
         }
     }
 
+    /**
+     * 获取秒杀结果
+     */
     public long getSeckillResult(Long userId, long goodsId) {
         SeckillOrder order = orderService.getSeckillOrderByUserIdGoodsId(userId, goodsId);
         if(order != null) {//秒杀成功,则返回订单id
@@ -58,19 +64,31 @@ public class SeckillService {
         }
     }
 
+    /**
+     * 设置商品秒杀结束
+     */
     private void setGoodsOver(Long goodsId) {
         redisService.set(SeckillKey.isGoodsOver, ""+goodsId, true);
     }
 
+    /**
+     * 判断商品秒杀是否结束，返回布尔值
+     */
     private boolean getGoodsOver(long goodsId) {
         return redisService.exists(SeckillKey.isGoodsOver, ""+goodsId);
     }
 
+    /**
+     * 重置商品库存，并删除所有订单
+     */
     public void reset(List<GoodsVo> goodsList) {
         goodsService.resetStock(goodsList);
         orderService.deleteOrders();
     }
 
+    /**
+     * 验证秒杀地址
+     */
     public boolean checkPath(SeckillUser user, long goodsId, String path) {
         if(user == null || path == null) {
             return false;
@@ -79,6 +97,9 @@ public class SeckillService {
         return path.equals(pathOld);
     }
 
+    /**
+     * 创建秒杀地址
+     */
     public String createSeckillPath(SeckillUser user, long goodsId) {
         if(user == null || goodsId <=0) {
             return null;
@@ -88,6 +109,9 @@ public class SeckillService {
         return str;
     }
 
+    /**
+     * 检查验证码
+     */
     public boolean checkVerifyCode(SeckillUser user, long goodsId, int verifyCode) {
         if(user == null || goodsId <=0) {
             return false;
@@ -100,6 +124,9 @@ public class SeckillService {
         return true;
     }
 
+    /**
+     * 创建验证码
+     */
     public BufferedImage createVerifyCode(SeckillUser user, long goodsId) {
         if(user == null || goodsId <=0) {
             return null;
@@ -136,6 +163,9 @@ public class SeckillService {
         return image;
     }
 
+    /**
+     * 计算数学公式
+     */
     private static int calc(String exp) {
         try {
             ScriptEngineManager manager = new ScriptEngineManager();
@@ -150,6 +180,7 @@ public class SeckillService {
     private static char[] ops = new char[] {'+', '-', '*'};
 
     /**
+     * 生成验证码的数学公式
      * + - *
      * */
     private String generateVerifyCode(Random rdm) {

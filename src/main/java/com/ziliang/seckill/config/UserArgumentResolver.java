@@ -15,7 +15,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// 自定义解析器进行参数绑定
+/**
+ * 自定义解析器进行参数绑定
+ */
 @Service
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 

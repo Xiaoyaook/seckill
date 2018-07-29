@@ -19,7 +19,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 
 
-// 自定义拦截器,用于注解的拦截
+
+/**
+ * 拦截器
+ *
+ * 用于拦截 @AccessLimit 注解
+ */
 @Service
 public class AccessInterceptor extends HandlerInterceptorAdapter {
     @Autowired
@@ -66,6 +71,13 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
         return true;
     }
 
+    /**
+     * 将 JSON 格式的错误信息 写入 HTTP response 并返回给客户端
+     *
+     * @param response
+     * @param cm
+     * @throws Exception
+     */
     private void render(HttpServletResponse response, CodeMsg cm)throws Exception {
         response.setContentType("application/json;charset=UTF-8");
         OutputStream out = response.getOutputStream();
@@ -75,6 +87,12 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
         out.close();
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @return
+     */
     private SeckillUser getUser(HttpServletRequest request, HttpServletResponse response) {
         String paramToken = request.getParameter(SeckillUserService.COOKI_NAME_TOKEN);
         String cookieToken = getCookieValue(request, SeckillUserService.COOKI_NAME_TOKEN);
@@ -85,6 +103,13 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
         return userService.getByToken(response, token);
     }
 
+    /**
+     * 在 HTTP request 中获取指定名称的Cookie
+     *
+     * @param request
+     * @param cookieName
+     * @return
+     */
     private String getCookieValue(HttpServletRequest request, String cookieName) {
         Cookie[]  cookies = request.getCookies();
         if(cookies == null || cookies.length <= 0){

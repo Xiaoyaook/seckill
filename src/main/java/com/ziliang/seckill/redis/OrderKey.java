@@ -4,6 +4,9 @@ public class OrderKey extends BasePrefix {
     public OrderKey(String prefix) {
         super(prefix);
     }
-    // seckill order userid goodsid
+
+    /**
+     * 通过用户id和商品id获取秒杀订单时，Redis Key的前缀
+     */
     public static OrderKey getSeckillOrderByUidGid = new OrderKey("soug");
 }

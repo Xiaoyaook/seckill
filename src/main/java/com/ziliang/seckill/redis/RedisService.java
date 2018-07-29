@@ -11,14 +11,18 @@ import redis.clients.jedis.ScanResult;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Redis 操作
+ */
 @Service
 public class RedisService {
+
     @Autowired
     JedisPool jedisPool;
 
     /**
-     * 获取当个对象
-     * */
+     * 获取单个对象
+     */
     public <T> T get(KeyPrefix prefix, String key,  Class<T> clazz) {
         Jedis jedis = null;
         try {
@@ -119,6 +123,9 @@ public class RedisService {
         }
     }
 
+    /**
+     * 将所有带有prefix前缀的元素删除
+     */
     public boolean delete(KeyPrefix prefix) {
         if(prefix == null) {
             return false;
@@ -142,6 +149,9 @@ public class RedisService {
         }
     }
 
+    /**
+     * 扫描指定的Key
+     */
     public List<String> scanKeys(String key) {
         Jedis jedis = null;
         try {
@@ -168,7 +178,9 @@ public class RedisService {
         }
     }
 
-    // 转化value的类型为String,例如value是个POJO,就将其转化为JSONString
+    /**
+     * 转化value的类型为String,例如value是个POJO,就将其转化为JSONString
+     */
     public static <T> String beanToString(T value) {
         if(value == null) {
             return null;
@@ -185,6 +197,9 @@ public class RedisService {
         }
     }
 
+    /**
+     * 把字符串转换成类
+     */
     @SuppressWarnings("unchecked")
     public static  <T> T stringToBean(String str, Class<T> clazz) {
         if(str == null || str.length() <= 0 || clazz == null) {
@@ -201,6 +216,10 @@ public class RedisService {
         }
     }
 
+    /**
+     * 关闭连接，将连接返回连接池
+     * @param jedis
+     */
     private void returnToPool(Jedis jedis) {
         if(jedis != null) {
             jedis.close();

@@ -6,6 +6,10 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+/**
+ * 创建Redis连接池
+ *
+ */
 @Service
 public class RedisPoolFactory {
     @Autowired

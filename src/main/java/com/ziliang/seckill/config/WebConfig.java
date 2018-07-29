@@ -9,6 +9,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
+/**
+ * 拦截器和解析器在此注册
+ */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     @Autowired

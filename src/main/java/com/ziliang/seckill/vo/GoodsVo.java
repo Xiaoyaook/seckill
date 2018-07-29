@@ -5,7 +5,9 @@ import com.ziliang.seckill.domain.Goods;
 import java.util.Date;
 
 
-// 把秒杀商品的属性与普通商品属性整合
+/**
+ * 把秒杀商品的属性与普通商品属性整合
+ */
 public class GoodsVo extends Goods {
     private Double SeckillPrice;
     private Integer stockCount;

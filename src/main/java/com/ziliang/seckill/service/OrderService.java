@@ -21,15 +21,24 @@ public class OrderService {
     @Autowired
     RedisService redisService;
 
+    /**
+     * 由用户id和商品id获取秒杀订单
+     */
     public SeckillOrder getSeckillOrderByUserIdGoodsId(long userId, long goodsId) {
         // return orderDao.getSeckillOrderByUserIdGoodsId(userId, goodsId);
         return redisService.get(OrderKey.getSeckillOrderByUidGid, ""+userId+"_"+goodsId, SeckillOrder.class);
     }
 
+    /**
+     * 由订单id获取订单
+     */
     public OrderInfo getOrderById(long orderId) {
         return orderDao.getOrderById(orderId);
     }
 
+    /**
+     * 创建新的订单
+     */
     @Transactional
     public OrderInfo createOrder(SeckillUser user, GoodsVo goods) {
         OrderInfo orderInfo = new OrderInfo();
@@ -54,6 +63,9 @@ public class OrderService {
         return orderInfo;
     }
 
+    /**
+     * 删除所有订单
+     */
     public void deleteOrders() {
         orderDao.deleteOrders();
         orderDao.deleteSeckillOrders();

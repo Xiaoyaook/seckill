@@ -2,6 +2,10 @@ package com.ziliang.seckill.util;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
+
+/**
+ * 密码加密工具类
+ */
 public class MD5Util {
     public static String md5(String src) {
         return DigestUtils.md5Hex(src);

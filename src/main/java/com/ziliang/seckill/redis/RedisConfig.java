@@ -3,6 +3,11 @@ package com.ziliang.seckill.redis;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * Redis 配置
+ * 配置详情写在application.properties中
+ * ConfigurationProperties将配置文件的属性映射成一个POJO实体类
+ */
 @Component
 @ConfigurationProperties(prefix = "redis")
 public class RedisConfig {

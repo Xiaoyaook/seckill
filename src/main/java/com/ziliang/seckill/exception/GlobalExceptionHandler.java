@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
+/**
+ * 全局异常类处理
+ */
 @ControllerAdvice
 @ResponseBody
 public class GlobalExceptionHandler {

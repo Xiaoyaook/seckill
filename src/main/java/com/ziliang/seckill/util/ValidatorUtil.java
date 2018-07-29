@@ -7,7 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// 验证手机号
+/**
+ * 验证工具类
+ * 验证手机号
+ */
 public class ValidatorUtil {
     private static final Pattern mobile_pattern = Pattern.compile("1\\d{10}");
 
