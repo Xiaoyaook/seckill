@@ -39,7 +39,7 @@ swagger生成的Api文档:
 * Druid
 * Redis
 * RabbitMQ
-* 静态配置
+* 静态资源处理
 
 ## 二、数据库设计
 
@@ -53,7 +53,7 @@ swagger生成的Api文档:
 
 ## 三、前后端分离，后端API设计
 
-/api (项目中没有加入这个)
+/api 
 * /goods/to_list : 商品列表
 * /goods/detail/{goodsId} : 商品详情
 * /login/do_login : 用户登录
